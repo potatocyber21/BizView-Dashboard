@@ -1,0 +1,18 @@
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv("superstore_sales.csv")
+
+# Convert 'Order Date' to datetime format
+df['Order Date'] = pd.to_datetime(df['Order Date'], errors='coerce')  # Handle invalid date formats
+
+# Handle missing values (drop rows with nulls)
+df = df.dropna()
+
+# Add a new column: Profit Margin (checking for zero sales to avoid division by zero error)
+df['Profit Margin'] = df.apply(lambda row: row['Profit'] / row['Sales'] if row['Sales'] != 0 else 0, axis=1)
+
+# Save cleaned data to a new CSV
+df.to_csv("cleaned_sales_data.csv", index=False)
+
+print("Data cleaning complete. Cleaned data saved to 'cleaned_sales_data.csv'")
